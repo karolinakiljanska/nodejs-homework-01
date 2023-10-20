@@ -1,3 +1,4 @@
+const contacts = require("./contacts.js");
 const { Command } = require("commander");
 const program = new Command();
 program
@@ -11,28 +12,31 @@ program.parse(process.argv);
 
 const argv = program.opts();
 
-// TODO: refaktor
-function invokeAction({ action, id, name, email, phone }) {
+const invokeAction = async ({ action, id, name, email, phone }) => {
   switch (action) {
     case "list":
-      // ...
+      const contactsList = await contacts.listContacts();
+      console.table(contactsList);
       break;
 
     case "get":
-      // ... id
+      const getById = await contacts.getContactById(id);
+      console.log(getById);
       break;
 
     case "add":
-      // ... name email phone
+      const newContact = await contacts.addContact({ name, email, phone });
+      console.log(newContact);
       break;
 
     case "remove":
-      // ... id
+      const removeById = await contacts.removeContact(id);
+      console.log(removeById);
       break;
 
-    default:
-      console.warn("\x1B[31m Unknown action type!");
+    // default:
+    //   console.warn("\x1B[31m Unknown action type!");
   }
-}
+};
 
 invokeAction(argv);
